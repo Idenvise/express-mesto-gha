@@ -3,7 +3,7 @@ const { ERROR_VALIDATION, ERROR_NOTFOUND, ERROR_SERVER } = require('../errors/er
 
 module.exports.getCards = (req, res) => {
   Card.find()
-    .then((cards) => res.status(200).send(cards))
+    .then((cards) => res.send(cards))
     .catch(() => res.status(ERROR_SERVER).send({ message: 'Произошла ошибка' }));
 };
 
@@ -12,14 +12,14 @@ module.exports.deleteCard = (req, res) => {
     .orFail(() => {
       throw new Error('Карточка не найдена');
     })
-    .then(() => res.status(200).send({ message: 'Карточка удалена' }))
+    .then(() => res.send({ message: 'Карточка удалена' }))
     .catch((err) => {
-      if (err.name === 'Error') {
+      if (err.message === 'Карточка не найдена') {
         res.status(ERROR_NOTFOUND).send({ message: err.message });
         return;
       }
       if (err.name === 'CastError') {
-        res.status(ERROR_VALIDATION).send({ message: 'Неверный идентификатор' });
+        res.status(ERROR_VALIDATION).send({ message: 'Некорректный идентификатор' });
         return;
       }
       res.status(ERROR_SERVER).send({ message: 'Произошла ошибка' });
@@ -29,10 +29,10 @@ module.exports.deleteCard = (req, res) => {
 module.exports.postCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(200).send(card))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_VALIDATION).send({ message: 'Неверные данные карточки' });
+        res.status(ERROR_VALIDATION).send({ message: 'Некорректные данные' });
         return;
       }
       res.status(ERROR_SERVER).send({ message: 'Произошла ошибка' });
@@ -44,13 +44,13 @@ module.exports.setLike = (req, res) => {
     .orFail(() => {
       throw new Error('Карточка не найдена');
     })
-    .then((card) => res.status(200).send(card))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_VALIDATION).send({ message: 'Неверный идентификатор' });
+        res.status(ERROR_VALIDATION).send({ message: 'Некорректный идентификатор' });
         return;
       }
-      if (err.name === 'Error') {
+      if (err.message === 'Карточка не найдена') {
         res.status(ERROR_NOTFOUND).send({ message: 'Карточка не найдена' });
         return;
       }
@@ -63,13 +63,13 @@ module.exports.removeLike = (req, res) => {
     .orFail(() => {
       throw new Error('Карточка не найдена');
     })
-    .then((card) => res.status(200).send(card))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_VALIDATION).send({ message: 'Неверный идентификатор' });
+        res.status(ERROR_VALIDATION).send({ message: 'Некорректный идентификатор' });
         return;
       }
-      if (err.name === 'Error') {
+      if (err.message === 'Карточка не найдена') {
         res.status(ERROR_NOTFOUND).send({ message: 'Карточка не найдена' });
         return;
       }

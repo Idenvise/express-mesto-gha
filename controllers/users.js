@@ -10,7 +10,7 @@ module.exports.getUser = (req, res) => {
       const {
         name, about, avatar, _id,
       } = user;
-      res.status(200).send({
+      res.send({
         name, about, avatar, _id,
       });
     })
@@ -19,7 +19,7 @@ module.exports.getUser = (req, res) => {
         res.status(ERROR_VALIDATION).send({ message: 'Неверный идентификатор' });
         return;
       }
-      if (err.name === 'Error') {
+      if (err.message === 'Пользователь не найден') {
         res.status(ERROR_NOTFOUND).send({ message: err.message });
         return;
       }
@@ -28,7 +28,7 @@ module.exports.getUser = (req, res) => {
 };
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.status(200).send(users))
+    .then((users) => res.send(users))
     .catch(() => res.status(ERROR_SERVER).send({ message: 'На сервере произошла ошибка' }));
 };
 
@@ -38,7 +38,7 @@ module.exports.postUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_VALIDATION).send({ message: 'Неверные данные пользователя' });
+        res.status(ERROR_VALIDATION).send({ message: 'Некорректные данные' });
         return;
       }
       res.status(ERROR_SERVER).send({ message: 'На сервере произошла ошибка' });
@@ -48,10 +48,10 @@ module.exports.postUser = (req, res) => {
 module.exports.patchUser = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true, new: true })
-    .then((user) => res.status(200).send({ name: user.name, about: user.about }))
+    .then((user) => res.send({ name: user.name, about: user.about }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_VALIDATION).send({ message: 'Неверные данные пользователя' });
+        res.status(ERROR_VALIDATION).send({ message: 'Некорректные данные' });
         return;
       }
       res.status(ERROR_SERVER).send({ message: 'На сервере произошла ошибка' });
@@ -61,6 +61,11 @@ module.exports.patchUser = (req, res) => {
 module.exports.patchUserAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true, new: true })
-    .then((user) => res.status(200).send({ avatar: user.avatar }))
-    .catch(() => res.status(ERROR_SERVER).send({ message: 'На сервере произошла ошибка' }));
+    .then((user) => res.send({ avatar: user.avatar }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Некорректные данные' });
+      }
+      res.status(ERROR_SERVER).send({ message: 'На сервере произошла ошибка' });
+    });
 };

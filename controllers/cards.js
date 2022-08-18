@@ -15,7 +15,7 @@ module.exports.deleteCard = (req, res) => {
     .then(() => res.status(200).send({ message: 'Карточка удалена' }))
     .catch((err) => {
       if (err.name === 'Error') {
-        res.status(ERROR_NOTFOUND).send(err.message);
+        res.status(ERROR_NOTFOUND).send({ message: err.message });
         return;
       }
       if (err.name === 'CastError') {
@@ -46,7 +46,7 @@ module.exports.setLike = (req, res) => {
     })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         res.status(ERROR_VALIDATION).send({ message: 'Неверный идентификатор' });
         return;
       }
@@ -65,7 +65,7 @@ module.exports.removeLike = (req, res) => {
     })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         res.status(ERROR_VALIDATION).send({ message: 'Неверный идентификатор' });
         return;
       }

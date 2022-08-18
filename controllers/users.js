@@ -47,7 +47,7 @@ module.exports.postUser = (req, res) => {
 
 module.exports.patchUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true, new: true })
     .then((user) => res.status(200).send({ name: user.name, about: user.about }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -60,7 +60,7 @@ module.exports.patchUser = (req, res) => {
 
 module.exports.patchUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true, new: true })
     .then((user) => res.status(200).send({ avatar: user.avatar }))
     .catch(() => res.status(ERROR_SERVER).send({ message: 'На сервере произошла ошибка' }));
 };

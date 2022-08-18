@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const { ERROR_NOTFOUND } = require('./errors/errors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -21,7 +22,7 @@ app.use((req, res, next) => {
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
 app.patch('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не существует' });
+  res.status(ERROR_NOTFOUND).send({ message: 'Страница не существует' });
 });
 
 app.listen(PORT, () => {

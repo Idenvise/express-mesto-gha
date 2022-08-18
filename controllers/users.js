@@ -64,7 +64,8 @@ module.exports.patchUserAvatar = (req, res) => {
     .then((user) => res.send({ avatar: user.avatar }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(ERROR_VALIDATION).send({ message: 'Некорректные данные' });
+        return;
       }
       res.status(ERROR_SERVER).send({ message: 'На сервере произошла ошибка' });
     });

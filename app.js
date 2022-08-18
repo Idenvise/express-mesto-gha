@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 });
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
-app.patch('*', (req, res) => {
+app.use('*', (req, res) => {
   res.status(ERROR_NOTFOUND).send({ message: 'Страница не существует' });
 });
 

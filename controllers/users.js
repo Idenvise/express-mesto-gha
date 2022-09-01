@@ -1,9 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const isEmail = require('validator/lib/isEmail');
 const User = require('../models/users');
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
+const ConflictError = require('../errors/conflictError');
 
 module.exports.getUser = (req, res, next) => {
   User.findById(req.params._id)
@@ -37,17 +37,20 @@ module.exports.postUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
   try {
-    if (isEmail(email)) {
+    if (email) {
       bcrypt.hash(password, 10)
         .then((hash) => {
           User.create({
             name, about, avatar, email, password: hash,
-          })
+          }, { runValidators: true, new: true })
             .then((user) => res.send({ data: user }))
             .catch((err) => {
               if (err.name === 'ValidationError') {
                 next(new ValidationError('Некорректные данные'));
                 return;
+              }
+              if (err.code === 11000) {
+                next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
               }
               next(err);
             });

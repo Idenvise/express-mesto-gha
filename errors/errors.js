@@ -4,4 +4,5 @@ module.exports = {
   ERROR_FORBIDDEN: 403,
   ERROR_NOTFOUND: 404,
   ERROR_SERVER: 500,
+  ERROR_CONFLICT: 409,
 };

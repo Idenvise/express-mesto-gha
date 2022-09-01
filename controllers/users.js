@@ -4,6 +4,7 @@ const User = require('../models/users');
 const NotFoundError = require('../errors/notFoundError');
 const ValidationError = require('../errors/validationError');
 const ConflictError = require('../errors/conflictError');
+const UnauthorizedError = require('../errors/unauthorizedError');
 
 module.exports.getUser = (req, res, next) => {
   User.findById(req.params._id)
@@ -43,8 +44,8 @@ module.exports.postUser = (req, res, next) => {
         .then((hash) => {
           User.create({
             name, about, avatar, email, password: hash,
-          }, { runValidators: true, new: true })
-            .then((user) => res.send({ data: user }))
+          })
+            .then((user) => {res.send({ data: user })})
             .catch((err) => {
               console.log(err)
               if (err.name === 'ValidationError') {
@@ -95,7 +96,7 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email }).select('+password')
     .orFail(() => {
-      throw new NotFoundError('Неправильные почта или пароль');
+      throw new UnauthorizedError('Неправильные почта или пароль');
     })
     .then((user) => {
       if (!user) {

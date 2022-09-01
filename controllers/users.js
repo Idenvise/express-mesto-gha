@@ -26,6 +26,7 @@ module.exports.getUser = (req, res, next) => {
       next(err);
     });
 };
+
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
@@ -45,6 +46,7 @@ module.exports.postUser = (req, res, next) => {
           }, { runValidators: true, new: true })
             .then((user) => res.send({ data: user }))
             .catch((err) => {
+              console.log(err)
               if (err.name === 'ValidationError') {
                 next(new ValidationError('Некорректные данные'));
                 return;

@@ -46,7 +46,6 @@ module.exports.postCard = (req, res, next) => {
 };
 
 module.exports.setLike = (req, res, next) => {
-  console.log(req.params._id)
   Card.findByIdAndUpdate(req.params._id, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail(() => {
       throw new NotFoundError('Карточка не найдена');

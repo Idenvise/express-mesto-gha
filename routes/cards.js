@@ -17,7 +17,15 @@ router.delete('/cards/:_id', celebrate({
     _id: Joi.string().required().length(24),
   }),
 }), deleteCard);
-router.put('/cards/:_id/likes', setLike);
-router.delete('/cards/:_id/likes', removeLike);
+router.put('/cards/:_id/likes', celebrate({
+  body: Joi.object().keys({
+    _id: Joi.string().required().length(24),
+  }),
+}), setLike);
+router.delete('/cards/:_id/likes', celebrate({
+  body: Joi.object().keys({
+    _id: Joi.string().required().length(24),
+  }),
+}), removeLike);
 
 module.exports = router;

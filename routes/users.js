@@ -8,7 +8,7 @@ router.get('/users/me', getUserMe);
 router.get('/users', getUsers);
 router.get('/users/:_id', celebrate({
   body: Joi.object().keys({
-    _id: Joi.required().objectId(),
+    _id: Joi.required().string().hex().length(24),
   }),
 }), getUser);
 router.patch('/users/me', celebrate({

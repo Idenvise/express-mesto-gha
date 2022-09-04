@@ -13,10 +13,10 @@ module.exports.getUser = (req, res, next) => {
     })
     .then((user) => {
       const {
-        name, about, avatar, _id,
+        name, about, avatar, email, _id,
       } = user;
       res.send({
-        name, about, avatar, _id,
+        name, about, avatar, email, _id,
       });
     })
     .catch((err) => {
@@ -129,10 +129,10 @@ module.exports.getUserMe = (req, res, next) => {
     })
     .then((user) => {
       const {
-        name, about, avatar, _id,
+        name, about, avatar, email, _id,
       } = user;
       res.send({
-        name, about, avatar, _id,
+        name, about, avatar, email, _id,
       });
     })
     .catch((err) => {

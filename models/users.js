@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { regExpLink } = require('../middlewares/linkValidation');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -16,6 +17,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: regExpLink,
   },
   email: {
     type: String,

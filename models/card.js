@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { regExpLink } = require('../middlewares/linkValidation');
 
 const cardSchema = mongoose.Schema({
   name: {
@@ -10,6 +11,7 @@ const cardSchema = mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: regExpLink,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

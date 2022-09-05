@@ -6,7 +6,9 @@ const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { login, postUser } = require('./controllers/users');
-const { ERROR_NOTFOUND, ERROR_SERVER } = require('./errors/errors');
+const { ERROR_SERVER } = require('./errors/errors');
+const { regExpLink } = require('./middlewares/linkValidation');
+const NotFoundError = require('./errors/notFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -29,7 +31,7 @@ app.post('/signup', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
     // eslint-disable-next-line no-useless-escape
-    avatar: Joi.string().regex(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/),
+    avatar: Joi.string().regex(regExpLink),
   }),
 }), postUser);
 
@@ -38,16 +40,15 @@ app.use(auth);
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
 
-app.use('*', (req, res) => {
-  res.status(ERROR_NOTFOUND).send({ message: 'Страница не существует' });
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Страница не существует'));
 });
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const { statusCode = ERROR_SERVER, message } = err;
   res.status(statusCode).send({ message: statusCode === ERROR_SERVER ? 'На сервере произошла ошибка' : message });
-  next(err);
 });
 
 app.listen(PORT, () => {

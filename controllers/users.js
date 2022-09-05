@@ -39,6 +39,9 @@ module.exports.postUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
   try {
+    if (User.findOne({ email })) {
+      throw new ConflictError('Пользователь с таким email уже зарегистрирован');
+    }
     if (email) {
       bcrypt.hash(password, 10)
         .then((hash) => {

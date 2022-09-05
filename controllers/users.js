@@ -39,7 +39,7 @@ module.exports.postUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
   try {
-    if (!User.findOne({ email })) {
+    if (email) {
       bcrypt.hash(password, 10)
         .then((hash) => {
           User.create({
@@ -61,7 +61,7 @@ module.exports.postUser = (req, res, next) => {
             });
         });
     } else {
-      throw new ConflictError('Пользователь с таким email уже зарегистрирован');
+      throw new ValidationError('Некорректные данные');
     }
   } catch (err) {
     next(err);

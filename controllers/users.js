@@ -38,36 +38,37 @@ module.exports.postUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  try {
-    if (User.findOne({ email })) {
-      throw new ConflictError('Пользователь с таким email уже зарегистрирован');
+  if (User.findOne({ email })) {
+    throw new ConflictError('Пользователь с таким email уже зарегистрирован');
+  } else {
+    try {
+      if (email) {
+        bcrypt.hash(password, 10)
+          .then((hash) => {
+            User.create({
+              name, about, avatar, email, password: hash,
+            })
+              .then((user) => res.send({
+                name: user.name,
+                about: user.about,
+                avatar: user.avatar,
+                email: user.email,
+                id: user._id,
+              }))
+              .catch((err) => {
+                if (err.name === 'ValidationError') {
+                  next(new ValidationError('Некорректные данные'));
+                  return;
+                }
+                next(err);
+              });
+          });
+      } else {
+        throw new ValidationError('Некорректные данные');
+      }
+    } catch (err) {
+      next(err);
     }
-    if (email) {
-      bcrypt.hash(password, 10)
-        .then((hash) => {
-          User.create({
-            name, about, avatar, email, password: hash,
-          })
-            .then((user) => res.send({
-              name: user.name,
-              about: user.about,
-              avatar: user.avatar,
-              email: user.email,
-              id: user._id,
-            }))
-            .catch((err) => {
-              if (err.name === 'ValidationError') {
-                next(new ValidationError('Некорректные данные'));
-                return;
-              }
-              next(err);
-            });
-        });
-    } else {
-      throw new ValidationError('Некорректные данные');
-    }
-  } catch (err) {
-    next(err);
   }
 };
 

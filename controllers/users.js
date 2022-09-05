@@ -39,7 +39,7 @@ module.exports.postUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
   if (User.findOne({ email })) {
-    throw new ConflictError('Пользователь с таким email уже зарегистрирован');
+    next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
   } else {
     try {
       if (email) {

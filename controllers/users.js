@@ -40,36 +40,33 @@ module.exports.postUser = (req, res, next) => {
   } = req.body;
   (User.findOne({ email }))
     .orFail(() => {
-      try {
-        if (email) {
-          bcrypt.hash(password, 10)
-            .then((hash) => {
-              User.create({
-                name, about, avatar, email, password: hash,
-              })
-                .then((user) => res.send({
-                  name: user.name,
-                  about: user.about,
-                  avatar: user.avatar,
-                  email: user.email,
-                  id: user._id,
-                }))
-                .catch((err) => {
-                  if (err.name === 'ValidationError') {
-                    next(new ValidationError('Некорректные данные'));
-                    return;
-                  }
-                  next(err);
-                });
-            });
-        } else {
-          throw new ValidationError('Некорректные данные');
-        }
-      } catch (err) {
-        next(err);
+      if (email) {
+        bcrypt.hash(password, 10)
+          .then((hash) => {
+            User.create({
+              name, about, avatar, email, password: hash,
+            })
+              .then((user) => res.send({
+                name: user.name,
+                about: user.about,
+                avatar: user.avatar,
+                email: user.email,
+                id: user._id,
+              }))
+              .catch((err) => {
+                if (err.name === 'ValidationError') {
+                  next(new ValidationError('Некорректные данные'));
+                  return;
+                }
+                next(err);
+              });
+          });
+      } else {
+        throw new ValidationError('Некорректные данные');
       }
     })
-    .then(() => next(new ConflictError('Пользователь с таким email уже зарегистрирован')));
+    .then(() => next(new ConflictError('Пользователь с таким email уже зарегистрирован')))
+    .catch(next);
 };
 
 module.exports.patchUser = (req, res, next) => {

@@ -38,34 +38,30 @@ module.exports.postUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  (User.findOne({ email }))
-    .orFail(() => {
-      if (email) {
-        bcrypt.hash(password, 10)
-          .then((hash) => {
-            User.create({
-              name, about, avatar, email, password: hash,
-            })
-              .then((user) => res.send({
-                name: user.name,
-                about: user.about,
-                avatar: user.avatar,
-                email: user.email,
-                id: user._id,
-              }))
-              .catch((err) => {
-                if (err.name === 'ValidationError') {
-                  next(new ValidationError('Некорректные данные'));
-                  return;
-                }
-                next(err);
-              });
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
+        name, about, avatar, email, password: hash,
+      })
+        .then((user) => {
+          res.send({
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            email: user.email,
+            id: user._id,
           });
-      } else {
-        throw new ValidationError('Некорректные данные');
-      }
+        })
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            throw new ValidationError('Переданы некорректные данные');
+          }
+          if (err.code === 11000) {
+            throw new ConflictError('Пользовтель с таким email уже зарегистрирован');
+          }
+          next(err);
+        });
     })
-    .then(() => next(new ConflictError('Пользователь с таким email уже зарегистрирован')))
     .catch(next);
 };
 

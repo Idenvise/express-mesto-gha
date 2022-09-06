@@ -20,7 +20,6 @@ router.patch('/users/me', celebrate({
 }), patchUser);
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    // eslint-disable-next-line no-useless-escape
     avatar: Joi.string().required().regex(regExpLink),
   }),
 }), patchUserAvatar);

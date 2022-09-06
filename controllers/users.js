@@ -54,10 +54,10 @@ module.exports.postUser = (req, res, next) => {
         })
         .catch((err) => {
           if (err.name === 'ValidationError') {
-            throw new ValidationError('Переданы некорректные данные');
+            next(new ValidationError('Переданы некорректные данные'));
           }
           if (err.code === 11000) {
-            throw new ConflictError('Пользовтель с таким email уже зарегистрирован');
+            next(new ConflictError('Пользовтель с таким email уже зарегистрирован'));
           }
           next(err);
         });

@@ -19,6 +19,8 @@ const options = {
     'http://localhost:порт',
     'https://frontend.mesto.nomorepartiesxyz.ru',
     'https://YOUR.github.io',
+    'http://frontend.mesto.nomorepartiesxyz.ru/',
+    'http://back.mesto.ru.nomorepartiesxyz.ru/',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,

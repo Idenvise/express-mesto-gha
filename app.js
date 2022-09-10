@@ -9,10 +9,12 @@ const { login, postUser } = require('./controllers/users');
 const { ERROR_SERVER } = require('./errors/errors');
 const { regExpLink } = require('./middlewares/linkValidation');
 const NotFoundError = require('./errors/notFoundError');
+const { cors, options } = require('./middlewares/cors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
+app.use('*', cors(options));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -30,7 +32,6 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-    // eslint-disable-next-line no-useless-escape
     avatar: Joi.string().regex(regExpLink),
   }),
 }), postUser);

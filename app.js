@@ -9,12 +9,10 @@ const { login, postUser } = require('./controllers/users');
 const { ERROR_SERVER } = require('./errors/errors');
 const { regExpLink } = require('./middlewares/linkValidation');
 const NotFoundError = require('./errors/notFoundError');
-const { cors, options } = require('./middlewares/cors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use('*', cors(options));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

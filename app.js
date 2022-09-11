@@ -12,7 +12,7 @@ const { regExpLink } = require('./middlewares/linkValidation');
 const NotFoundError = require('./errors/notFoundError');
 const { options } = require('./middlewares/cors');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 80 } = process.env;
 const app = express();
 
 app.use('*', cors(options));

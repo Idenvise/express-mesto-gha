@@ -13,7 +13,7 @@ const NotFoundError = require('./errors/notFoundError');
 
 const options = {
   origin: [
-    'http://localhost:3000',
+    'localhost:3000',
     'https://web.postman.co/',
     'https://ВАШ ДОМЕЙН С ДОКУМЕНТА',
     'https://YOUR.github.io',

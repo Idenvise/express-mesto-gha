@@ -13,10 +13,7 @@ const NotFoundError = require('./errors/notFoundError');
 
 const options = {
   origin: [
-    'localhost:3000',
-    'https://web.postman.co/',
-    'https://ВАШ ДОМЕЙН С ДОКУМЕНТА',
-    'https://YOUR.github.io',
+    '*',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
@@ -26,10 +23,6 @@ const options = {
 };
 const { PORT = 3000 } = process.env;
 const app = express();
-
-app.use('*', (req, res) => {
-  console.log(req.headers.origin);
-});
 
 app.use('*', cors(options));
 

@@ -16,8 +16,7 @@ const app = express();
 const allowedCors = [
   'https://praktikum.tk',
   'http://praktikum.tk',
-  'localhost:3000',
-  'https://web.postman.co/',
+
 ];
 
 app.use((req, res, next) => {

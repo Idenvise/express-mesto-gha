@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+
 const { errors, Joi, celebrate } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
@@ -14,7 +14,7 @@ const NotFoundError = require('./errors/notFoundError');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use(cors());
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

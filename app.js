@@ -26,6 +26,11 @@ const options = {
 };
 const { PORT = 3000 } = process.env;
 const app = express();
+
+app.use('*', (req, res) => {
+  console.log(req.headers.origin);
+});
+
 app.use('*', cors(options));
 
 app.use(bodyParser.json());

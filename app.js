@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const { errors, Joi, celebrate } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
@@ -10,8 +11,13 @@ const { ERROR_SERVER } = require('./errors/errors');
 const { regExpLink } = require('./middlewares/linkValidation');
 const NotFoundError = require('./errors/notFoundError');
 
+
 const { PORT = 3000 } = process.env;
 const app = express();
+
+app.use(cors({
+  origin: '*',
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

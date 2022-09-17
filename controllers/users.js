@@ -114,7 +114,7 @@ module.exports.login = (req, res, next) => {
             return Promise.reject(new ValidationError('Неправильные почта или пароль'));
           }
           const token = jwt.sign({ _id: user._id }, 'super-giga-mega-secret-key', { expiresIn: '7d' });
-          res.cookie('token', token, { maxAge: 3600000 * 24 * 7, httpOnly: false });
+          res.send(token);
           res.send({ message: 'Пользователь авторизован' });
         })
         .catch(next);

@@ -13,9 +13,9 @@ const NotFoundError = require('./errors/notFoundError');
 
 const options = {
   origin: [
-    'http://localhost:порт',
-    'https://ВАШ ДОМЕЙН С ДОКУМЕНТА',
-    'https://YOUR.github.io',
+    'http://localhost:3000',
+    'frontend.mesto.nomorepartiesxyz.ru',
+    'https://idenvise.github.io',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
@@ -31,7 +31,7 @@ app.use('*', cors(options));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({

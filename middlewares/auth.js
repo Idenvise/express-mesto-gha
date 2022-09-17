@@ -3,7 +3,7 @@ const { ERROR_UNAUTHORIZED } = require('../errors/errors');
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
-  const { token } = req.headers.authorization;
+  const token = req.headers.Authorization;
   if (!token) {
     return res.status(ERROR_UNAUTHORIZED).send({ message: 'Необходима авторизация' });
   }

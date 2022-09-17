@@ -115,7 +115,6 @@ module.exports.login = (req, res, next) => {
           }
           const token = jwt.sign({ _id: user._id }, 'super-giga-mega-secret-key', { expiresIn: '7d' });
           res.send(token);
-          res.send({ message: 'Пользователь авторизован' });
         })
         .catch(next);
     })

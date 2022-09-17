@@ -113,8 +113,8 @@ module.exports.login = (req, res, next) => {
           if (!matched) {
             return Promise.reject(new ValidationError('Неправильные почта или пароль'));
           }
-          const token = jwt.sign({ _id: user._id }, 'super-giga-mega-secret-key', { expiresIn: '7d' });
-          res.send({ jwt: token });
+          const genToken = jwt.sign({ _id: user._id }, 'super-giga-mega-secret-key', { expiresIn: '7d' });
+          res.send({ token: genToken });
         })
         .catch(next);
     })

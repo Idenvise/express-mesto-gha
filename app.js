@@ -10,19 +10,7 @@ const { login, postUser } = require('./controllers/users');
 const { ERROR_SERVER } = require('./errors/errors');
 const { regExpLink } = require('./middlewares/linkValidation');
 const NotFoundError = require('./errors/notFoundError');
-
-const options = {
-  origin: [
-    'http://localhost:3000',
-    'frontend.mesto.nomorepartiesxyz.ru',
-    'https://idenvise.github.io',
-  ],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
-  credentials: true,
-};
+const { options } = require('./middlewares/cors');
 
 const { PORT = 3000 } = process.env;
 const app = express();

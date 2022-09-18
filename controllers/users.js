@@ -114,7 +114,16 @@ module.exports.login = (req, res, next) => {
             return Promise.reject(new ValidationError('Неправильные почта или пароль'));
           }
           const genToken = jwt.sign({ _id: user._id }, 'super-giga-mega-secret-key', { expiresIn: '7d' });
-          res.send({ token: genToken, user });
+          res.send({
+            token: genToken,
+            user: {
+              email: user.email,
+              _id: user._id,
+              about: user.about,
+              avatar: user.avatar,
+              name: user.name,
+            },
+          });
         })
         .catch(next);
     })

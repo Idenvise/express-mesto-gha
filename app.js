@@ -11,6 +11,7 @@ const { ERROR_SERVER } = require('./errors/errors');
 const { regExpLink } = require('./middlewares/linkValidation');
 const NotFoundError = require('./errors/notFoundError');
 const { options } = require('./middlewares/cors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -20,6 +21,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -42,6 +45,8 @@ app.use(auth);
 
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
+
+app.use(errorLogger);
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Страница не существует'));

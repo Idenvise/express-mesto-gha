@@ -6,6 +6,8 @@ const ValidationError = require('../errors/validationError');
 const ConflictError = require('../errors/conflictError');
 const UnauthorizedError = require('../errors/unauthorizedError');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 module.exports.getUser = (req, res, next) => {
   User.findById(req.params._id)
     .orFail(() => {
@@ -113,7 +115,7 @@ module.exports.login = (req, res, next) => {
           if (!matched) {
             return Promise.reject(new ValidationError('Неправильные почта или пароль'));
           }
-          const genToken = jwt.sign({ _id: user._id }, 'super-giga-mega-secret-key', { expiresIn: '7d' });
+          const genToken = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'super-giga-mega-secret-key', { expiresIn: '7d' });
           res.send({
             token: genToken,
             user: {

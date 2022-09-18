@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { ERROR_UNAUTHORIZED } = require('../errors/errors');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const token = req.headers.authorization;
@@ -9,7 +11,7 @@ module.exports = (req, res, next) => {
   }
   let payload;
   try {
-    payload = jwt.verify(token, 'super-giga-mega-secret-key');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'super-giga-mega-secret-key');
   } catch (err) {
     return res
       .status(ERROR_UNAUTHORIZED)
